@@ -4,11 +4,10 @@ A backend service that identifies and links customer contacts across multiple pu
 
 ## Live Endpoint
 
-> **Base URL:** `https://your-deployed-url.onrender.com`
+> **Base URL:** `https://bitespeed-backend-zfgr.onrender.com`
 >
 > **POST** `/identify`
 
-_(Update the URL after deploying to Render)_
 
 ## Tech Stack
 
@@ -30,7 +29,7 @@ _(Update the URL after deploying to Render)_
 
 ```bash
 # clone the repo
-git clone https://github.com/your-username/Bitespeed-Backend.git
+git clone https://github.com/jeetnik/Bitespeed-Backend.git
 cd Bitespeed-Backend
 
 # install dependencies
@@ -88,6 +87,21 @@ npm test
 ```
 
 Tests are idempotent — they clean the database before running, so no manual reset is needed.
+
+### Test Cases
+
+| # | Test | What it checks |
+|---|---|---|
+| 1 | New customer | Creates a primary contact with empty secondaries |
+| 2 | Same phone, new email | Creates a secondary linked to the existing primary |
+| 3 | Phone-only lookup | Returns the full consolidated contact group |
+| 4 | Secondary email lookup | Returns the full group from a secondary's email |
+| 5 | Primary email lookup | Returns the full group from the primary's email |
+| 6 | Duplicate request | Does not create extra contact rows |
+| 7 | Two separate primaries | George and Biff created independently |
+| 8 | Primary merging | Older primary wins, newer is demoted to secondary |
+| 9 | Empty body | Returns 400 validation error |
+| 10 | Null fields | Returns 400 validation error |
 
 ## Project Structure
 
