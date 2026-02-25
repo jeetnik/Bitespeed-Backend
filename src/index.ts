@@ -1,10 +1,22 @@
 import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../src/generated/prisma/client";
+import express from "express";
+import identifyRoute from "./routes/identify";
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+// parse JSON bodies
+app.use(express.json());
 
-export { prisma };
+// simple health check to make sure the server is alive
+app.get("/", (_req, res) => {
+    res.json({ status: "ok", message: "Bitespeed Identity Reconciliation Service" });
+});
+
+// mount the identify endpoint
+app.use("/identify", identifyRoute);
+
+// fire it up
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
